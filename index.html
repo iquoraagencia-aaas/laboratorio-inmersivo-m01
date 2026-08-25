@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="es" data-motion="on">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Oscar Eduardo López Sousa — Laboratorio inmersivo M01</title>
+<meta name="description" content="Siete conceptos de experiencias inmersivas explicados con animación pura y scroll.">
+<meta name="theme-color" content="#08080A">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css?v=6">
+</head>
+<body>
+
+<!-- ════════ MATERIALES COMPARTIDOS ════════
+     Gradientes, texturas y sombras que dan materialidad a los dibujos.
+     Todo generado en código: sin imágenes externas. -->
+<svg class="defs" aria-hidden="true" width="0" height="0">
+  <defs>
+    <!-- Paleta monocroma de fósforo verde: todo el mundo real se lee
+         en verdes, con ámbar reservado para lo orgánico y lo crítico. -->
+    <linearGradient id="mSkin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#dcf5a8"/><stop offset="55%" stop-color="#93c25c"/><stop offset="100%" stop-color="#4a6b2c"/>
+    </linearGradient>
+    <linearGradient id="mSkinDark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6f9440"/><stop offset="100%" stop-color="#2f4620"/>
+    </linearGradient>
+    <linearGradient id="mBrain" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f2c06a"/><stop offset="60%" stop-color="#c8853c"/><stop offset="100%" stop-color="#7d4d22"/>
+    </linearGradient>
+    <linearGradient id="mWood" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5e7f34"/><stop offset="40%" stop-color="#415a25"/><stop offset="100%" stop-color="#1e2c11"/>
+    </linearGradient>
+    <linearGradient id="mMetal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d8ecc0"/><stop offset="35%" stop-color="#82a266"/>
+      <stop offset="60%" stop-color="#b6cfa0"/><stop offset="100%" stop-color="#4c6238"/>
+    </linearGradient>
+    <linearGradient id="mDark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1d2a15"/><stop offset="100%" stop-color="#0a1207"/>
+    </linearGradient>
+    <linearGradient id="mScreen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1c3a1e"/><stop offset="50%" stop-color="#0a1a0d"/><stop offset="100%" stop-color="#173218"/>
+    </linearGradient>
+    <linearGradient id="mFabric" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5d7c3e"/><stop offset="100%" stop-color="#2a3c1c"/>
+    </linearGradient>
+    <linearGradient id="mSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#050d07"/><stop offset="55%" stop-color="#123018"/><stop offset="100%" stop-color="#2c5c30"/>
+    </linearGradient>
+    <linearGradient id="mHeart" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f0a13c"/><stop offset="55%" stop-color="#c25a1e"/><stop offset="100%" stop-color="#7a2f12"/>
+    </linearGradient>
+    <linearGradient id="mAcid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e6ff8a"/><stop offset="100%" stop-color="#9ed018"/>
+    </linearGradient>
+    <radialGradient id="mGlow"><stop offset="0%" stop-color="#CBFF3E" stop-opacity=".55"/><stop offset="100%" stop-color="#CBFF3E" stop-opacity="0"/></radialGradient>
+    <radialGradient id="mLamp"><stop offset="0%" stop-color="#d9ff9a" stop-opacity=".85"/><stop offset="100%" stop-color="#d9ff9a" stop-opacity="0"/></radialGradient>
+
+    <!-- Texturas: línea de barrido, trama de puntos y ruido de fósforo -->
+    <pattern id="pScan" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="none"/>
+      <rect width="4" height="1.4" fill="#000" opacity=".42"/>
+    </pattern>
+    <pattern id="pDither" width="6" height="6" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" fill="#CBFF3E" opacity=".14"/>
+      <circle cx="4.5" cy="4.5" r="1" fill="#CBFF3E" opacity=".09"/>
+    </pattern>
+    <pattern id="pGrid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0 H0 V28" fill="none" stroke="#CBFF3E" stroke-width=".6" opacity=".16"/>
+    </pattern>
+    <filter id="fNoise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" result="n"/>
+      <feColorMatrix in="n" type="matrix"
+        values="0 0 0 0 0.6  0 0 0 0 0.85  0 0 0 0 0.2  0 0 0 0.22 0"/>
+    </filter>
+    <filter id="fGrain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0" result="g"/>
+      <feComposite operator="in" in="g" in2="SourceGraphic" result="c"/>
+      <feBlend in="SourceGraphic" in2="c" mode="multiply"/>
+    </filter>
+    <filter id="fSoft" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000" flood-opacity=".65"/>
+    </filter>
+    <filter id="fBlur6"><feGaussianBlur stdDeviation="6"/></filter>
+  </defs>
+</svg>
+
+<canvas id="veil" aria-hidden="true"></canvas>
+<div class="halftone" id="halftone" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scanline" aria-hidden="true"></div>
+<div class="blackout" id="blackout" aria-hidden="true"></div>
+<div class="cursor" aria-hidden="true"></div>
+<div class="cursor__dot" aria-hidden="true"></div>
+
+<div class="progress" aria-hidden="true"><div class="progress__bar"></div></div>
+<div class="brand" aria-hidden="true"><span class="brand__mark"></span><span>M01 / ITESO</span></div>
+
+<nav class="chapters" aria-label="Índice">
+  <a class="chapters__item" href="#s-nombre"><span class="chapters__label">Inicio</span><span class="chapters__tick"></span><span class="chapters__beats"></span></a>
+  <a class="chapters__item" href="#s-carrera"><span class="chapters__label">Carrera</span><span class="chapters__tick"></span><span class="chapters__beats"></span></a>
+  <a class="chapters__item" href="#s-cognitiva"><span class="chapters__label">Inmersión cognitiva</span><span class="chapters__tick"></span><span class="chapters__beats"></span></a>
+  <a class="chapters__item" href="#s-experiencia"><span class="chapters__label">Experiencia inmersiva</span><span class="chapters__tick"></span><span class="chapters__beats"></span></a>
+  <a class="chapters__item" href="#s-evi"><span class="chapters__label">EVI</span><span class="chapters__tick"></span><span class="chapters__beats"></span></a>
+  <a class="chapters__item" href="#s-ar"><span class="chapters__label">Realidad aumentada</span><span class="chapters__tick"></span><span class="chapters__beats"></span></a>
+  <a class="chapters__item" href="#s-vr"><span class="chapters__label">Realidad virtual</span><span class="chapters__tick"></span><span class="chapters__beats"></span></a>
+  <a class="chapters__item" href="#s-mr"><span class="chapters__label">Realidad mixta</span><span class="chapters__tick"></span><span class="chapters__beats"></span></a>
+  <a class="chapters__item" href="#s-ejes"><span class="chapters__label">Ejes 3D</span><span class="chapters__tick"></span><span class="chapters__beats"></span></a>
+  <a class="chapters__item" href="#s-cierre"><span class="chapters__label">Fin</span><span class="chapters__tick"></span><span class="chapters__beats"></span></a>
+</nav>
+
+<button class="motion-toggle" id="motionToggle" aria-pressed="false">
+  <span class="motion-toggle__led"></span><span class="motion-toggle__text">Movimiento</span>
+</button>
+
+<main>
+
+<!-- ══════════════ 00 · NOMBRE ══════════════ -->
+<section class="section name-sec" id="s-nombre" data-chapter="0" data-veil="drift">
+  <div class="name">
+    <p class="q q--top" data-hero-el>Laboratorio inmersivo · Módulo 01</p>
+    <h1 class="name__stack">
+      <span class="mask"><span class="mask__in" data-nameline>OSCAR</span></span>
+      <span class="mask"><span class="mask__in" data-nameline>EDUARDO</span></span>
+      <!-- se rellena en verde con el scroll -->
+      <span class="mask"><span class="mask__in name__fill" data-nameline data-scrollfill>LÓPEZ SOUSA</span></span>
+    </h1>
+    <div class="name__foot" data-hero-el>
+      <span class="scroll-cue"><i class="scroll-cue__rail"></i>Baja</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 01 · CARRERA ══════════════ -->
+<section class="chapter" id="s-carrera" data-chapter="1" data-veil="grid">
+  <div class="stage">
+    <div class="beat" data-beat>
+      <div class="art art--full" data-art="market">
+        <svg class="market" viewBox="0 0 1200 600" preserveAspectRatio="none" aria-hidden="true">
+          <g id="mkGrid"></g>
+          <polyline id="mkLine" fill="none" stroke="var(--acid)" stroke-width="3"
+            points="0,520 120,470 240,500 360,400 480,430 600,320 720,350 840,220 960,250 1080,120 1200,60"/>
+          <g id="mkDots"></g>
+        </svg>
+      </div>
+      <p class="q">Estudio</p>
+      <h2 class="mega" data-fill>Negocios &amp;<br>Mercados<br><span class="mega--out">Digitales</span></h2>
+    </div>
+
+    <!-- el negocio se decide en una pantalla: laptop real con datos en vivo -->
+    <div class="beat" data-beat>
+      <div class="art art--full art--obj" data-art="laptop">
+        <svg class="scn scn--laptop" viewBox="0 0 900 520" aria-hidden="true">
+          <ellipse cx="450" cy="470" rx="300" ry="26" fill="#000" opacity=".55"/>
+          <!-- base -->
+          <path d="M170 452 L730 452 L790 486 L110 486 Z" fill="url(#mMetal)"/>
+          <path d="M170 452 L730 452 L722 458 L178 458 Z" fill="#7d838d" opacity=".7"/>
+          <rect x="405" y="470" width="90" height="6" rx="3" fill="#5d636c"/>
+          <!-- tapa -->
+          <path d="M212 92 L688 92 L688 452 L212 452 Z" fill="url(#mDark)" stroke="#35472a" stroke-width="3"/>
+          <rect x="232" y="112" width="436" height="316" rx="4" fill="url(#mScreen)"/>
+          <!-- contenido de pantalla -->
+          <g id="lapUI" opacity="0">
+            <rect x="232" y="112" width="436" height="34" fill="#0b1720"/>
+            <circle cx="250" cy="129" r="5" fill="#FF5B2E"/><circle cx="266" cy="129" r="5" fill="#e8c24a"/><circle cx="282" cy="129" r="5" fill="#CBFF3E"/>
+            <g id="lapBars"></g>
+            <polyline id="lapLine" fill="none" stroke="#CBFF3E" stroke-width="4" stroke-linecap="round"
+              points="252,392 300,368 348,378 396,330 444,344 492,286 540,300 588,232 636,196"/>
+            <g id="lapKpi"></g>
+          </g>
+          <!-- reflejo del cristal -->
+          <path d="M232 112 L360 112 L232 300 Z" fill="#ffffff" opacity=".05"/>
+        </svg>
+      </div>
+      <h2 class="mega mega--md" data-fill>Donde el negocio<br>se decide en<br>una pantalla</h2>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 02 · INMERSIÓN COGNITIVA ══════════════ -->
+<section class="chapter" id="s-cognitiva" data-chapter="2" data-veil="scatter">
+  <div class="stage">
+
+    <div class="scene" data-scene="head" data-scene-span="4" aria-hidden="true">
+      <svg class="scn scn--head" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMax meet">
+        <defs>
+          <clipPath id="skullClip">
+            <path d="M500 62 C612 62, 690 146, 690 250 C690 292, 676 312, 678 330
+                     L726 388 L676 404 C670 420, 682 428, 674 442 C666 456, 642 452, 638 464
+                     C632 490, 648 516, 620 530 C594 543, 556 540, 546 550 L546 620
+                     L360 620 L360 500 C316 466, 296 392, 300 320 C306 172, 392 62, 500 62 Z"/>
+          </clipPath>
+          <clipPath id="brainClip">
+            <path d="M498 118 C578 118, 636 176, 636 250 C636 296, 610 330, 566 344
+                     C536 354, 500 352, 476 344 C426 328, 396 292, 396 244 C396 172, 424 118, 498 118 Z"/>
+          </clipPath>
+        </defs>
+
+        <!-- ventana al mundo virtual, dentro del cráneo -->
+        <g clip-path="url(#skullClip)">
+          <rect id="hdSky" x="290" y="0" width="420" height="620" fill="url(#mSky)" opacity="0"/>
+          <g id="hdWorld" opacity="0">
+            <circle cx="520" cy="256" r="40" fill="#e9ffa6"/>
+            <circle cx="520" cy="256" r="86" fill="url(#mGlow)"/>
+            <path d="M300 330 L400 250 L470 306 L560 224 L650 300 L720 258 L720 620 L300 620 Z" fill="#143a20" opacity=".9"/>
+            <path d="M300 348 L380 300 L450 340 L540 288 L630 342 L720 306" fill="none" stroke="#CBFF3E" stroke-width="2.5" opacity=".8"/>
+            <g id="hdGrid"></g>
+            <g id="hdBuild">
+              <rect x="352" y="286" width="40" height="70" fill="rgba(203,255,62,.22)" stroke="#CBFF3E" stroke-width="1.5"/>
+              <rect x="600" y="266" width="52" height="90" fill="rgba(203,255,62,.22)" stroke="#CBFF3E" stroke-width="1.5"/>
+            </g>
+          </g>
+        </g>
+
+        <!-- cabeza: piel con volumen -->
+        <path id="hdSkin" fill="url(#mSkin)" opacity="0"
+              d="M500 62 C612 62, 690 146, 690 250 C690 292, 676 312, 678 330
+                 L726 388 L676 404 C670 420, 682 428, 674 442 C666 456, 642 452, 638 464
+                 C632 490, 648 516, 620 530 C594 543, 556 540, 546 550 L546 620
+                 L360 620 L360 500 C316 466, 296 392, 300 320 C306 172, 392 62, 500 62 Z"/>
+        <path id="hdShade" fill="url(#mSkinDark)" opacity="0"
+              d="M360 620 L360 500 C316 466, 296 392, 300 320 C306 210, 356 122, 430 84
+                 C372 140, 342 236, 352 330 C362 424, 396 486, 430 520 L430 620 Z"/>
+        <!-- oreja y ojo -->
+        <path id="hdEar" opacity="0" fill="url(#mSkinDark)" d="M414 330 C392 320, 380 348, 392 372 C402 392, 424 396, 430 380 C436 362, 430 338, 414 330 Z"/>
+        <ellipse id="hdEye" opacity="0" cx="612" cy="272" rx="15" ry="9" fill="#22300f"/>
+        <path id="hdBrow" opacity="0" d="M592 250 C606 242, 626 244, 636 252" fill="none" stroke="#3f5526" stroke-width="6" stroke-linecap="round"/>
+
+        <!-- cerebro visible -->
+        <g id="hdBrain" opacity="0">
+          <path d="M498 118 C578 118, 636 176, 636 250 C636 296, 610 330, 566 344
+                   C536 354, 500 352, 476 344 C426 328, 396 292, 396 244 C396 172, 424 118, 498 118 Z"
+                fill="url(#mBrain)"/>
+          <g clip-path="url(#brainClip)" stroke="#8d4f50" stroke-width="4" fill="none" opacity=".85">
+            <path d="M400 160 C440 180, 430 214, 470 226 C510 238, 496 270, 536 280 C572 290, 566 322, 604 330"/>
+            <path d="M420 130 C456 150, 448 186, 486 198 C524 210, 512 244, 552 254 C588 264, 584 296, 620 306"/>
+            <path d="M456 116 C492 136, 484 172, 522 184 C560 196, 548 230, 588 240"/>
+            <path d="M396 208 C430 224, 424 254, 458 268 C492 282, 484 312, 518 324"/>
+          </g>
+          <path d="M498 118 C578 118, 636 176, 636 250 C636 296, 610 330, 566 344
+                   C536 354, 500 352, 476 344 C426 328, 396 292, 396 244 C396 172, 424 118, 498 118 Z"
+                fill="none" stroke="#7d3f42" stroke-width="3"/>
+        </g>
+        <!-- el cerebro se enciende -->
+        <g id="hdSpark" opacity="0" clip-path="url(#brainClip)">
+          <g id="hdSparkDots"></g>
+        </g>
+
+        <!-- contorno -->
+        <path id="hdPath" fill="none" stroke="var(--bone)" stroke-width="3"
+              d="M500 62 C612 62, 690 146, 690 250 C690 292, 676 312, 678 330
+                 L726 388 L676 404 C670 420, 682 428, 674 442 C666 456, 642 452, 638 464
+                 C632 490, 648 516, 620 530 C594 543, 556 540, 546 550 L546 620
+                 L360 620 L360 500 C316 466, 296 392, 300 320 C306 172, 392 62, 500 62 Z"/>
+
+        <!-- estímulos reales del entorno, con iconos reconocibles -->
+        <g id="hdNoise"></g>
+
+        <g id="hdOver" opacity="0">
+          <circle cx="500" cy="300" r="270" fill="none" stroke="#CBFF3E" stroke-width="2" opacity=".5"/>
+          <circle cx="500" cy="300" r="360" fill="none" stroke="#CBFF3E" stroke-width="2" opacity=".3"/>
+          <circle cx="500" cy="300" r="450" fill="none" stroke="#CBFF3E" stroke-width="2" opacity=".16"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Pregunta 01</p>
+      <h2 class="mega mega--ask" data-fill>¿Qué es la<br>inmersión<br>cognitiva?</h2>
+    </div>
+    <div class="beat" data-beat><h2 class="mega mega--def" data-fill>Es el proceso</h2></div>
+    <div class="beat" data-beat><h2 class="mega mega--def" data-fill>por el que tu mente</h2></div>
+    <div class="beat" data-beat><h2 class="mega mega--def mega--out" data-fill>queda ocupada<br>por un entorno</h2></div>
+    <div class="beat" data-beat><h2 class="mega mega--def" data-fill>hasta que el mundo real<br>deja de registrarse</h2></div>
+  </div>
+</section>
+
+<!-- ══════════════ 03 · EXPERIENCIA INMERSIVA ══════════════
+     Una sala real en primera persona que se convierte en otro lugar. -->
+<section class="chapter" id="s-experiencia" data-chapter="3" data-veil="orbit">
+  <div class="stage">
+
+    <div class="scene scene--bleed" data-scene="room" data-scene-span="3" aria-hidden="true">
+      <svg class="scn scn--room" viewBox="0 0 1600 800" preserveAspectRatio="xMidYMid slice">
+        <!-- ── habitación real ── -->
+        <g id="rmReal">
+          <rect x="0" y="0" width="1600" height="560" fill="#17210f"/>
+          <rect x="0" y="560" width="1600" height="240" fill="url(#mWood)"/>
+          <g opacity=".35" stroke="#2c2013" stroke-width="2">
+            <path d="M0 600 H1600 M0 650 H1600 M0 710 H1600 M0 775 H1600"/>
+            <path d="M180 560 L120 800 M520 560 L500 800 M900 560 L920 800 M1280 560 L1340 800"/>
+          </g>
+          <!-- ventana con luz -->
+          <rect x="1040" y="120" width="360" height="330" rx="6" fill="#6ba36f"/>
+          <rect x="1040" y="120" width="360" height="330" rx="6" fill="none" stroke="#b8d49a" stroke-width="12"/>
+          <path d="M1220 120 V450 M1040 285 H1400" stroke="#b8d49a" stroke-width="10"/>
+          <path d="M1040 450 L900 800 L1560 800 L1400 450 Z" fill="#ffeec4" opacity=".08"/>
+          <!-- sofá -->
+          <g filter="url(#fSoft)">
+            <rect x="160" y="430" width="470" height="150" rx="18" fill="url(#mFabric)"/>
+            <rect x="176" y="392" width="438" height="86" rx="20" fill="#7c8f78"/>
+            <rect x="196" y="404" width="190" height="66" rx="12" fill="#8ba086" opacity=".85"/>
+            <rect x="410" y="404" width="190" height="66" rx="12" fill="#8ba086" opacity=".85"/>
+            <rect x="180" y="570" width="26" height="34" fill="#3c2f20"/>
+            <rect x="586" y="570" width="26" height="34" fill="#3c2f20"/>
+          </g>
+          <!-- mesa de centro -->
+          <g filter="url(#fSoft)">
+            <rect x="700" y="560" width="280" height="20" rx="6" fill="#4e6b2d"/>
+            <rect x="722" y="580" width="16" height="60" fill="#2f4419"/>
+            <rect x="944" y="580" width="16" height="60" fill="#2f4419"/>
+            <ellipse cx="840" cy="552" rx="34" ry="10" fill="#b3cf96"/>
+            <path d="M812 552 h56 l-8 34 h-40 z" fill="#d2e8b4"/>
+          </g>
+          <!-- planta -->
+          <g>
+            <path d="M1320 540 h84 l-12 100 h-60 z" fill="#40602a"/>
+            <path d="M1362 540 C1300 500, 1290 430, 1340 396" fill="none" stroke="#4a6b3c" stroke-width="10"/>
+            <path d="M1362 540 C1424 494, 1436 428, 1394 396" fill="none" stroke="#3d5c32" stroke-width="10"/>
+            <ellipse cx="1338" cy="392" rx="34" ry="20" fill="#4f7340" transform="rotate(-24 1338 392)"/>
+            <ellipse cx="1398" cy="392" rx="34" ry="20" fill="#456635" transform="rotate(24 1398 392)"/>
+          </g>
+          <!-- cuadro -->
+          <rect x="300" y="150" width="220" height="160" fill="#12210f" stroke="#8fae62" stroke-width="10"/>
+          <path d="M310 280 L370 210 L410 250 L470 180 L510 240 L510 300 L310 300 Z" fill="#2e5a33"/>
+        </g>
+
+        <!-- ── el mismo encuadre, ya virtual ── -->
+        <g id="rmVirtual" opacity="0">
+          <rect x="0" y="0" width="1600" height="470" fill="url(#mSky)"/>
+          <circle cx="1180" cy="180" r="66" fill="#e9ffa6"/>
+          <circle cx="1180" cy="180" r="150" fill="url(#mGlow)"/>
+          <path d="M0 470 L220 320 L400 430 L640 250 L860 400 L1080 300 L1320 420 L1600 320 L1600 470 Z" fill="#163a22"/>
+          <path d="M0 470 L220 320 L400 430 L640 250 L860 400 L1080 300 L1320 420 L1600 320" fill="none" stroke="#CBFF3E" stroke-width="3" opacity=".7"/>
+          <rect x="0" y="470" width="1600" height="330" fill="#061407"/>
+          <g id="rmGrid" stroke="#CBFF3E" stroke-width="2" opacity=".55"></g>
+          <!-- estructuras del entorno virtual -->
+          <g id="rmPillars" opacity="0">
+            <rect x="150" y="330" width="70" height="200" fill="rgba(203,255,62,.1)" stroke="#CBFF3E" stroke-width="3"/>
+            <rect x="1330" y="300" width="90" height="230" fill="rgba(203,255,62,.1)" stroke="#CBFF3E" stroke-width="3"/>
+            <circle cx="780" cy="380" r="58" fill="rgba(203,255,62,.12)" stroke="#CBFF3E" stroke-width="3"/>
+          </g>
+        </g>
+
+        <!-- ── manos con controles, en primer plano ── -->
+        <g id="rmHands" opacity="0">
+          <g filter="url(#fSoft)">
+            <path d="M300 800 L330 640 C336 606, 386 600, 396 634 L430 760 C438 790, 400 800, 380 800 Z" fill="url(#mSkin)"/>
+            <rect x="322" y="588" width="86" height="70" rx="18" fill="#16210f" stroke="#464c56" stroke-width="4"/>
+            <circle cx="365" cy="608" r="9" fill="#CBFF3E"/>
+          </g>
+          <g filter="url(#fSoft)">
+            <path d="M1300 800 L1270 640 C1264 606, 1214 600, 1204 634 L1170 760 C1162 790, 1200 800, 1220 800 Z" fill="url(#mSkin)"/>
+            <rect x="1192" y="588" width="86" height="70" rx="18" fill="#16210f" stroke="#464c56" stroke-width="4"/>
+            <circle cx="1235" cy="608" r="9" fill="#CBFF3E"/>
+          </g>
+        </g>
+
+        <!-- ── viñeta del visor ── -->
+        <g id="rmVisor" opacity="0">
+          <path d="M0 0 H1600 V800 H0 Z M800 400 m-560 0 a560 340 0 1 0 1120 0 a560 340 0 1 0 -1120 0"
+                fill="#000" fill-rule="evenodd"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Pregunta 02</p>
+      <h2 class="mega mega--ask" data-fill>¿Qué es una<br>experiencia<br>inmersiva?</h2>
+    </div>
+    <div class="beat" data-beat><h2 class="mega mega--def" data-fill>Es una experiencia</h2></div>
+    <div class="beat" data-beat><h2 class="mega mega--def mega--out" data-fill>que sustituye<br>tu entorno</h2></div>
+    <div class="beat" data-beat><h2 class="mega mega--def" data-fill>y responde<br>a lo que haces</h2></div>
+  </div>
+</section>
+
+<!-- ══════════════ 04 · EVI ══════════════ -->
+<section class="chapter" id="s-evi" data-chapter="4" data-veil="grid">
+  <div class="stage">
+
+    <!-- Un EVI no es el aparato: es el LUGAR. Por eso aquí no hay visor,
+         hay un CAVE: una sala cuyas paredes y piso son el entorno. -->
+    <div class="scene scene--bleed" data-scene="cave" data-scene-span="3" aria-hidden="true">
+      <svg class="scn scn--cave" viewBox="0 0 1600 800" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <clipPath id="cvBack"><rect x="420" y="120" width="760" height="430"/></clipPath>
+          <clipPath id="cvLeft"><path d="M60 40 L420 120 L420 550 L60 720 Z"/></clipPath>
+          <clipPath id="cvRight"><path d="M1540 40 L1180 120 L1180 550 L1540 720 Z"/></clipPath>
+          <clipPath id="cvFloor"><path d="M420 550 L1180 550 L1540 720 L60 720 Z"/></clipPath>
+        </defs>
+
+        <!-- la sala apagada: tres paredes y el piso -->
+        <rect x="0" y="0" width="1600" height="800" fill="#0a1207"/>
+        <rect x="420" y="120" width="760" height="430" fill="#141d10" stroke="#2c3d1c" stroke-width="3"/>
+        <path d="M60 40 L420 120 L420 550 L60 720 Z" fill="#111a0d" stroke="#2c3d1c" stroke-width="3"/>
+        <path d="M1540 40 L1180 120 L1180 550 L1540 720 Z" fill="#111a0d" stroke="#2c3d1c" stroke-width="3"/>
+        <path d="M420 550 L1180 550 L1540 720 L60 720 Z" fill="#0e1509" stroke="#2c3d1c" stroke-width="3"/>
+
+        <!-- el entorno proyectado en cada cara -->
+        <g id="cvBackImg" opacity="0" clip-path="url(#cvBack)">
+          <rect x="420" y="120" width="760" height="430" fill="url(#mSky)"/>
+          <circle cx="900" cy="240" r="52" fill="#e9ffa6"/><circle cx="900" cy="240" r="130" fill="url(#mGlow)"/>
+          <path d="M420 470 L560 350 L700 440 L860 300 L1010 430 L1180 340 L1180 550 L420 550 Z" fill="#163a22"/>
+          <path d="M420 470 L560 350 L700 440 L860 300 L1010 430 L1180 340" fill="none" stroke="#CBFF3E" stroke-width="3"/>
+        </g>
+        <g id="cvLeftImg" opacity="0" clip-path="url(#cvLeft)">
+          <path d="M60 40 L420 120 L420 550 L60 720 Z" fill="#0e2a18"/>
+          <path d="M60 470 L200 400 L330 470 L420 420 L420 550 L60 640 Z" fill="#163a22"/>
+          <path d="M60 470 L200 400 L330 470 L420 420" fill="none" stroke="#CBFF3E" stroke-width="3"/>
+        </g>
+        <g id="cvRightImg" opacity="0" clip-path="url(#cvRight)">
+          <path d="M1540 40 L1180 120 L1180 550 L1540 720 Z" fill="#0e2a18"/>
+          <path d="M1540 470 L1400 400 L1270 470 L1180 420 L1180 550 L1540 640 Z" fill="#163a22"/>
+          <path d="M1540 470 L1400 400 L1270 470 L1180 420" fill="none" stroke="#CBFF3E" stroke-width="3"/>
+        </g>
+        <g id="cvFloorImg" opacity="0" clip-path="url(#cvFloor)">
+          <path d="M420 550 L1180 550 L1540 720 L60 720 Z" fill="#0d2412"/>
+          <g id="cvFloorGrid" stroke="#CBFF3E" stroke-width="2" opacity=".65"></g>
+        </g>
+
+        <!-- proyectores en las esquinas del techo -->
+        <g id="cvProj" opacity="0">
+          <g><rect x="386" y="88" width="68" height="34" rx="7" fill="url(#mMetal)"/>
+             <path d="M420 122 L300 320 L540 320 Z" fill="#CBFF3E" opacity=".07"/></g>
+          <g><rect x="1146" y="88" width="68" height="34" rx="7" fill="url(#mMetal)"/>
+             <path d="M1180 122 L1060 320 L1300 320 Z" fill="#CBFF3E" opacity=".07"/></g>
+          <g><rect x="766" y="70" width="68" height="34" rx="7" fill="url(#mMetal)"/>
+             <path d="M800 104 L660 300 L940 300 Z" fill="#CBFF3E" opacity=".07"/></g>
+        </g>
+
+        <!-- cámaras de seguimiento -->
+        <g id="cvCams" opacity="0">
+          <g><circle cx="440" cy="150" r="14" fill="#1d2a15" stroke="#CBFF3E" stroke-width="3"/><circle cx="440" cy="150" r="5" fill="#CBFF3E"/></g>
+          <g><circle cx="1160" cy="150" r="14" fill="#1d2a15" stroke="#CBFF3E" stroke-width="3"/><circle cx="1160" cy="150" r="5" fill="#CBFF3E"/></g>
+          <g><circle cx="440" cy="520" r="14" fill="#1d2a15" stroke="#CBFF3E" stroke-width="3"/><circle cx="440" cy="520" r="5" fill="#CBFF3E"/></g>
+          <g><circle cx="1160" cy="520" r="14" fill="#1d2a15" stroke="#CBFF3E" stroke-width="3"/><circle cx="1160" cy="520" r="5" fill="#CBFF3E"/></g>
+        </g>
+        <g id="cvRays" opacity="0" stroke="#CBFF3E" stroke-width="1.6" stroke-dasharray="7 9" opacity=".7"></g>
+
+        <!-- la persona: dentro del lugar, sin visor que la aísle -->
+        <g id="cvPerson" opacity="0">
+          <ellipse cx="800" cy="700" rx="96" ry="18" fill="#000" opacity=".55"/>
+          <path d="M756 700 L764 552 C767 524, 833 524, 836 552 L844 700 Z" fill="#2e4527"/>
+          <circle cx="800" cy="500" r="46" fill="url(#mSkin)"/>
+          <path d="M760 480 C772 452, 828 452, 840 480 C832 466, 768 466, 760 480 Z" fill="#2c3a18"/>
+          <!-- gafas ligeras de seguimiento, no un visor cerrado -->
+          <path d="M770 496 h60" stroke="#CBFF3E" stroke-width="4"/>
+          <circle cx="782" cy="496" r="11" fill="none" stroke="#CBFF3E" stroke-width="4"/>
+          <circle cx="818" cy="496" r="11" fill="none" stroke="#CBFF3E" stroke-width="4"/>
+          <circle cx="800" cy="452" r="6" fill="#CBFF3E"/>
+          <path d="M836 596 L906 566" stroke="url(#mSkin)" stroke-width="22" stroke-linecap="round"/>
+        </g>
+
+        <!-- el entorno reacciona a dónde está la persona -->
+        <g id="cvEcho" opacity="0">
+          <circle cx="800" cy="700" r="70" fill="none" stroke="#CBFF3E" stroke-width="3"/>
+          <circle cx="800" cy="700" r="130" fill="none" stroke="#CBFF3E" stroke-width="2" opacity=".6"/>
+          <circle cx="800" cy="700" r="200" fill="none" stroke="#CBFF3E" stroke-width="2" opacity=".3"/>
+        </g>
+        <g id="cvInfo"></g>
+      </svg>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Pregunta 03</p>
+      <h2 class="mega mega--ask" data-fill>¿Qué es<br>un EVI?</h2>
+    </div>
+    <div class="beat" data-beat><h2 class="mega mega--def" data-fill>Es el lugar,<br>no el aparato</h2></div>
+    <div class="beat" data-beat><h2 class="mega mega--def mega--out" data-fill>un espacio que se<br>genera a tu paso</h2></div>
+    <div class="beat" data-beat><h2 class="mega mega--def" data-fill>y sabe siempre<br>dónde estás</h2></div>
+  </div>
+</section>
+
+<!-- ══════════════ 05 · REALIDAD AUMENTADA ══════════════ -->
+<section class="chapter" id="s-ar" data-chapter="5" data-veil="grid">
+  <div class="stage">
+
+    <div class="scene scene--bleed" data-scene="arhand" data-scene-span="3" aria-hidden="true">
+      <svg class="scn scn--arhand" viewBox="0 0 1600 800" preserveAspectRatio="xMidYMid slice">
+        <!-- sala real de fondo -->
+        <rect x="0" y="0" width="1600" height="470" fill="#16210f"/>
+        <rect x="0" y="470" width="1600" height="330" fill="url(#mWood)"/>
+        <path d="M0 470 H1600" stroke="#3a4d24" stroke-width="4"/>
+        <g opacity=".3" stroke="#2c2013" stroke-width="2">
+          <path d="M0 540 H1600 M0 620 H1600 M0 710 H1600"/>
+          <path d="M300 470 L200 800 M760 470 L740 800 M1200 470 L1300 800"/>
+        </g>
+        <rect x="120" y="180" width="250" height="180" fill="#12210f" stroke="#8fae62" stroke-width="8"/>
+        <path d="M128 340 L190 268 L232 306 L292 240 L332 300 L332 352 L128 352 Z" fill="#2e5a33"/>
+        <g>
+          <path d="M1380 400 h90 l-14 100 h-62 z" fill="#40602a"/>
+          <path d="M1425 400 C1370 364, 1364 300, 1408 272" fill="none" stroke="#4a6b3c" stroke-width="9"/>
+          <ellipse cx="1406" cy="268" rx="30" ry="17" fill="#4f7340" transform="rotate(-24 1406 268)"/>
+        </g>
+
+        <defs>
+          <clipPath id="arGlass"><rect x="618" y="200" width="294" height="520" rx="26"/></clipPath>
+        </defs>
+
+        <!-- Mano con el teléfono. El objeto AR existe SOLO dentro de la
+             pantalla: se ve a través del aparato, como en la realidad. -->
+        <g id="arPhoneGroup" opacity="0">
+          <g filter="url(#fSoft)">
+            <path d="M520 800 L556 596 C566 552, 640 546, 652 594 L700 792 Z" fill="url(#mSkin)"/>
+            <path d="M652 620 C690 604, 706 640, 686 662 C670 680, 640 668, 640 648 Z" fill="url(#mSkinDark)" opacity=".7"/>
+          </g>
+          <rect x="600" y="180" width="330" height="560" rx="40" fill="#0e1116" stroke="#2e3f24" stroke-width="8"/>
+
+          <g clip-path="url(#arGlass)">
+            <rect x="618" y="200" width="294" height="520" fill="#070b06"/>
+            <!-- el mundo real visto por la cámara, un poco más cerca -->
+            <g id="arFeed" opacity="0">
+              <rect x="618" y="200" width="294" height="330" fill="#16210f"/>
+              <rect x="618" y="530" width="294" height="190" fill="url(#mWood)"/>
+              <path d="M618 530 H912" stroke="#3a4d24" stroke-width="3"/>
+              <path d="M690 530 V720 M846 530 V720" stroke="#2b3d18" stroke-width="2" opacity=".6"/>
+              <rect x="636" y="258" width="96" height="72" fill="#12210f" stroke="#8fae62" stroke-width="5"/>
+              <path d="M640 320 L664 292 L680 310 L706 280 L724 304 L724 326 L640 326 Z" fill="#2e5a33"/>
+              <g>
+                <path d="M852 462 h46 l-7 64 h-32 z" fill="#40602a"/>
+                <path d="M875 462 C848 442, 846 412, 868 398" fill="none" stroke="#4a6b3c" stroke-width="6"/>
+                <ellipse cx="866" cy="396" rx="19" ry="11" fill="#4f7340" transform="rotate(-24 866 396)"/>
+              </g>
+              <!-- ── el objeto digital, superpuesto sobre ese mundo ── -->
+              <g id="arChair" opacity="0">
+                <ellipse cx="762" cy="628" rx="88" ry="17" fill="#CBFF3E" opacity=".22"/>
+                <path d="M708 566 L816 566 L810 600 L714 600 Z" fill="rgba(203,255,62,.3)" stroke="#CBFF3E" stroke-width="3"/>
+                <path d="M722 566 L730 448 C732 434, 792 434, 794 448 L802 566 Z" fill="rgba(203,255,62,.16)" stroke="#CBFF3E" stroke-width="3"/>
+                <path d="M736 452 H788 M734 480 H790 M732 510 H792" stroke="#CBFF3E" stroke-width="2" opacity=".7"/>
+                <path d="M718 600 L710 664 M806 600 L814 664 M736 600 L732 660 M788 600 L792 660" stroke="#CBFF3E" stroke-width="3"/>
+                <path d="M690 640 H834" stroke="#CBFF3E" stroke-width="2" stroke-dasharray="7 7" opacity=".85"/>
+              </g>
+            </g>
+            <!-- interfaz de la cámara -->
+            <g id="arScreenUI" opacity="0">
+              <rect x="618" y="200" width="294" height="46" fill="#08130a" opacity=".92"/>
+              <circle cx="646" cy="223" r="7" fill="#FF5B2E"/>
+              <text x="666" y="230" class="svgmono" fill="#EFE9DE" font-size="17">REC · AR</text>
+              <path d="M700 300 h-24 v-24 M830 300 h24 v-24 M700 590 h-24 v24 M830 590 h24 v24"
+                    stroke="#CBFF3E" stroke-width="4" fill="none"/>
+              <g id="arCta"></g>
+            </g>
+          </g>
+          <path d="M618 200 L722 200 L618 384 Z" fill="#ffffff" opacity=".05"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Pregunta 04</p>
+      <h2 class="mega mega--ask" data-fill>¿Qué es la<br>realidad<br>aumentada?</h2>
+    </div>
+    <div class="beat" data-beat><h2 class="mega mega--def" data-fill>Superpone<br>información digital</h2></div>
+    <div class="beat" data-beat><h2 class="mega mega--def mega--out" data-fill>sobre el mundo real</h2></div>
+    <div class="beat" data-beat><h2 class="mega mega--def" data-fill>sin quitarte<br>el mundo</h2></div>
+
+    <!-- portada de los usos -->
+    <div class="beat" data-beat><h2 class="mega mega--cover" data-fill>Dónde<br>se usa</h2></div>
+
+    <div class="beat" data-beat>
+      <p class="q">Uso 01 · Educación</p>
+      <h2 class="mega mega--md" data-fill>Educación</h2>
+      <div class="art art--full art--obj" data-art="exEdu">
+        <svg class="scn scn--ex" viewBox="0 0 1000 500" aria-hidden="true">
+          <!-- mesa de taller de diseño -->
+          <rect x="0" y="360" width="1000" height="140" fill="url(#mWood)"/>
+          <path d="M0 360 H1000" stroke="#3a4d24" stroke-width="4"/>
+          <!-- libro de diseño abierto -->
+          <g filter="url(#fSoft)">
+            <path d="M300 372 L500 356 L700 372 L700 384 L500 368 L300 384 Z" fill="#b8d49a"/>
+            <path d="M300 384 L500 368 L700 384 L700 396 L500 380 L300 396 Z" fill="#b9b3a6"/>
+          </g>
+          <!-- silla de diseño, holograma AR girando -->
+          <g id="eduChair" opacity="0">
+            <ellipse cx="500" cy="360" rx="120" ry="22" fill="#CBFF3E" opacity=".16"/>
+            <g id="eduChairSpin">
+              <path d="M440 350 L452 214 C454 196, 546 196, 548 214 L560 350 Z" fill="rgba(203,255,62,.12)" stroke="#CBFF3E" stroke-width="3"/>
+              <ellipse cx="500" cy="212" rx="48" ry="16" fill="rgba(203,255,62,.2)" stroke="#CBFF3E" stroke-width="3"/>
+              <path d="M448 350 L436 132 C434 112, 566 112, 564 132 L552 350" fill="none" stroke="#CBFF3E" stroke-width="3"/>
+              <path d="M452 350 L430 420 M548 350 L570 420 M470 350 L462 420 M530 350 L538 420" stroke="#CBFF3E" stroke-width="3"/>
+            </g>
+          </g>
+          <!-- cotas y capas -->
+          <g id="eduTags" opacity="0">
+            <path d="M600 132 H700 M600 350 H700 M690 132 V350" stroke="#CBFF3E" stroke-width="2"/>
+            <path d="M400 132 H300 M300 132 V214 M300 214 H420" stroke="#CBFF3E" stroke-width="2"/>
+            <path d="M300 305 H440" stroke="#FF5B2E" stroke-width="2"/>
+            <g id="eduLabels"></g>
+          </g>
+        </svg>
+      </div>
+      <p class="sub" data-sub>La silla que estudias, a escala real sobre tu mesa.</p>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Uso 02 · Juegos</p>
+      <h2 class="mega mega--md" data-fill>Juegos</h2>
+      <div class="art art--full art--obj" data-art="exGame">
+        <svg class="scn scn--ex" viewBox="0 0 1000 500" aria-hidden="true">
+          <!-- banqueta real -->
+          <rect x="0" y="330" width="1000" height="170" fill="#3a3d37"/>
+          <path d="M0 330 H1000" stroke="#575b52" stroke-width="5"/>
+          <rect x="0" y="380" width="1000" height="6" fill="#4b4f47"/>
+          <path d="M120 330 v170 M380 330 v170 M640 330 v170 M900 330 v170" stroke="#4b4f47" stroke-width="4"/>
+          <!-- arbusto y banca reales -->
+          <ellipse cx="120" cy="300" rx="86" ry="52" fill="#3b5233"/>
+          <ellipse cx="170" cy="316" rx="60" ry="38" fill="#324529"/>
+          <g><rect x="760" y="286" width="180" height="12" rx="4" fill="#47612c"/>
+             <rect x="770" y="298" width="10" height="44" fill="#2b3d18"/><rect x="920" y="298" width="10" height="44" fill="#2b3d18"/></g>
+          <!-- criatura AR reconocible -->
+          <g id="gmCreature" opacity="0">
+            <ellipse cx="500" cy="392" rx="80" ry="16" fill="#CBFF3E" opacity=".2"/>
+            <path d="M436 366 C428 300, 468 254, 500 254 C532 254, 572 300, 564 366 Z" fill="rgba(203,255,62,.3)" stroke="#CBFF3E" stroke-width="4"/>
+            <path d="M456 268 L436 216 L482 250 Z" fill="rgba(203,255,62,.3)" stroke="#CBFF3E" stroke-width="4"/>
+            <path d="M544 268 L564 216 L518 250 Z" fill="rgba(203,255,62,.3)" stroke="#CBFF3E" stroke-width="4"/>
+            <circle cx="478" cy="308" r="11" fill="#08080A"/><circle cx="522" cy="308" r="11" fill="#08080A"/>
+            <path d="M482 338 q18 16 36 0" fill="none" stroke="#08080A" stroke-width="5" stroke-linecap="round"/>
+            <path d="M450 366 l-10 26 M550 366 l10 26" stroke="#CBFF3E" stroke-width="6" stroke-linecap="round"/>
+          </g>
+          <!-- HUD del juego -->
+          <g id="gmHud" opacity="0">
+            <circle cx="500" cy="330" r="140" fill="none" stroke="#FF5B2E" stroke-width="4" stroke-dasharray="10 14"/>
+            <circle cx="500" cy="330" r="96" fill="none" stroke="#FF5B2E" stroke-width="3" opacity=".6"/>
+            <g id="gmTags"></g>
+          </g>
+        </svg>
+      </div>
+      <p class="sub" data-sub>El personaje existe en tu calle. Hay que caminar hasta él.</p>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Uso 03 · Retail</p>
+      <h2 class="mega mega--md" data-fill>Retail</h2>
+      <div class="art art--full art--obj" data-art="exRetail">
+        <svg class="scn scn--ex" viewBox="0 0 1000 500" aria-hidden="true">
+          <!-- sala real -->
+          <rect x="0" y="0" width="1000" height="330" fill="#18240f"/>
+          <rect x="0" y="330" width="1000" height="170" fill="url(#mWood)"/>
+          <path d="M0 330 H1000" stroke="#3a4d24" stroke-width="4"/>
+          <rect x="70" y="70" width="150" height="120" fill="#12210f" stroke="#8fae62" stroke-width="7"/>
+          <g><path d="M880 250 h70 l-10 80 h-50 z" fill="#40602a"/>
+             <path d="M915 250 C876 224, 872 182, 902 162" fill="none" stroke="#4a6b3c" stroke-width="8"/>
+             <ellipse cx="900" cy="160" rx="26" ry="15" fill="#4f7340" transform="rotate(-24 900 160)"/></g>
+          <!-- sofá AR con textura -->
+          <g id="rtSofa" opacity="0">
+            <ellipse cx="500" cy="404" rx="230" ry="26" fill="#000" opacity=".45"/>
+            <rect x="300" y="292" width="400" height="96" rx="16" fill="rgba(203,255,62,.16)" stroke="#CBFF3E" stroke-width="3"/>
+            <rect x="314" y="240" width="372" height="66" rx="18" fill="rgba(203,255,62,.1)" stroke="#CBFF3E" stroke-width="3"/>
+            <rect x="330" y="252" width="164" height="52" rx="10" fill="rgba(203,255,62,.14)" stroke="#CBFF3E" stroke-width="2"/>
+            <rect x="506" y="252" width="164" height="52" rx="10" fill="rgba(203,255,62,.14)" stroke="#CBFF3E" stroke-width="2"/>
+            <rect x="286" y="256" width="30" height="132" rx="12" fill="rgba(203,255,62,.14)" stroke="#CBFF3E" stroke-width="3"/>
+            <rect x="684" y="256" width="30" height="132" rx="12" fill="rgba(203,255,62,.14)" stroke="#CBFF3E" stroke-width="3"/>
+            <path d="M320 388 v26 M680 388 v26" stroke="#CBFF3E" stroke-width="5"/>
+          </g>
+          <g id="rtTags" opacity="0">
+            <path d="M286 442 H714 M286 432 v20 M714 432 v20" stroke="#EFE9DE" stroke-width="3"/>
+            <rect x="742" y="188" width="40" height="40" fill="#CBFF3E" stroke="#EFE9DE" stroke-width="3"/>
+            <rect x="792" y="188" width="40" height="40" fill="#FF5B2E" stroke="#EFE9DE" stroke-width="1"/>
+            <rect x="842" y="188" width="40" height="40" fill="#5FE0C0" stroke="#EFE9DE" stroke-width="1"/>
+            <g id="rtLabels"></g>
+          </g>
+        </svg>
+      </div>
+      <p class="sub" data-sub>Saber si cabe antes de comprarlo.</p>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Uso 04 · Medicina</p>
+      <h2 class="mega mega--md" data-fill>Medicina</h2>
+      <div class="art art--full art--obj" data-art="exMed">
+        <svg class="scn scn--ex scn--med" viewBox="0 0 1000 500" aria-hidden="true">
+          <defs>
+            <!-- El corazón es una curva paramétrica: sirve de recorte para
+                 construir el volumen con curvas de nivel, no con rellenos. -->
+            <clipPath id="mdHeartClip"><path id="mdHeartPath" d=""/></clipPath>
+            <linearGradient id="mdScanGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#CBFF3E" stop-opacity="0"/>
+              <stop offset="45%" stop-color="#CBFF3E" stop-opacity=".9"/>
+              <stop offset="55%" stop-color="#CBFF3E" stop-opacity=".9"/>
+              <stop offset="100%" stop-color="#CBFF3E" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          <rect x="0" y="0" width="1000" height="500" fill="#060d06"/>
+
+          <!-- camilla y paciente, en contorno: contexto sin protagonismo -->
+          <g id="mdBed" opacity=".38" fill="none" stroke="#4a6b2c" stroke-width="2">
+            <path d="M60 430 H940 M60 430 V470 M940 430 V470"/>
+            <path d="M120 430 C260 396, 740 396, 880 430"/>
+            <ellipse cx="176" cy="404" rx="44" ry="30"/>
+            <path d="M420 418 h180"/>
+          </g>
+
+          <!-- radar de fondo -->
+          <g id="mdRadar" opacity="0" fill="none" stroke="#2e5a2a" stroke-width="1.5">
+            <circle cx="400" cy="246" r="90"/><circle cx="400" cy="246" r="150"/>
+            <circle cx="400" cy="246" r="210"/>
+            <path d="M400 36 V456 M190 246 H610"/>
+            <g id="mdTicks"></g>
+          </g>
+
+          <!-- el órgano, en curvas de nivel -->
+          <g id="mdHolo" opacity="0">
+            <g clip-path="url(#mdHeartClip)">
+              <rect x="180" y="40" width="440" height="400" fill="rgba(203,255,62,.05)"/>
+              <g id="mdIso" stroke="#CBFF3E" stroke-width="1.6" opacity=".75"></g>
+              <rect id="mdScanBand" x="180" y="40" width="440" height="54" fill="url(#mdScanGrad)" opacity="0"/>
+            </g>
+            <use href="#mdHeartPath" fill="none" stroke="#CBFF3E" stroke-width="3.6"/>
+            <g id="mdAnat"></g>
+            <!-- grandes vasos -->
+            <g fill="none" stroke="#CBFF3E" stroke-width="11" stroke-linecap="round" opacity=".92">
+              <path d="M404 118 C404 76, 442 58, 474 74"/>
+            </g>
+            <g fill="none" stroke="#5FE0C0" stroke-width="8" stroke-linecap="round" opacity=".85">
+              <path d="M356 116 C338 80, 300 70, 278 86"/>
+              <path d="M452 110 C470 78, 506 70, 524 84"/>
+            </g>
+            <!-- puntos de referencia del modelo -->
+            <g id="mdNodes" fill="#CBFF3E"></g>
+          </g>
+
+          <!-- anillo de escaneo con marcas -->
+          <g id="mdRing" opacity="0">
+            <circle cx="400" cy="246" r="196" fill="none" stroke="#CBFF3E" stroke-width="2" stroke-dasharray="3 12" opacity=".8"/>
+            <g id="mdRingMarks" stroke="#CBFF3E" stroke-width="2.5"></g>
+          </g>
+
+          <!-- retícula de puntería -->
+          <g id="mdCross" opacity="0" stroke="#CBFF3E" stroke-width="2" fill="none">
+            <path d="M400 66 v26 M400 400 v26 M220 246 h26 M554 246 h26"/>
+            <path d="M232 92 h30 v-30 M568 92 h-30 v-30 M232 400 h30 v30 M568 400 h-30 v30" opacity=".7"/>
+          </g>
+
+          <!-- consola de signos -->
+          <g id="mdVitals" opacity="0">
+            <rect x="646" y="120" width="316" height="188" rx="8" fill="rgba(7,18,10,.9)" stroke="#2f4a2c" stroke-width="2"/>
+            <path d="M646 156 H962" stroke="#2f4a2c" stroke-width="2"/>
+            <polyline id="mdEcg" fill="none" stroke="#CBFF3E" stroke-width="3.4" stroke-linejoin="round"
+              points="664,250 706,250 722,214 738,286 754,250 800,250 816,226 832,272 848,250 944,250"/>
+            <g id="mdVitalTxt"></g>
+          </g>
+        </svg>
+      </div>
+      <p class="sub" data-sub>El órgano del paciente, flotando sobre la mesa.</p>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Uso 05 · Navegación</p>
+      <h2 class="mega mega--md" data-fill>Navegación</h2>
+      <div class="art art--full art--obj" data-art="exNav">
+        <svg class="scn scn--ex scn--map" viewBox="0 0 1000 520" aria-hidden="true">
+          <rect x="0" y="0" width="1000" height="520" fill="#060f08"/>
+          <!-- manzanas -->
+          <g id="mpBlocks"></g>
+          <!-- calles -->
+          <g id="mpStreets" stroke="#1e3f22" stroke-width="14" stroke-linecap="square"></g>
+          <!-- ruta -->
+          <path id="mpRoute" fill="none" stroke="#CBFF3E" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"
+                d="M140 460 L140 350 L360 350 L360 220 L640 220 L640 120 L840 120"/>
+          <!-- origen y destino -->
+          <g id="mpMarks" opacity="0">
+            <circle cx="140" cy="460" r="18" fill="#5FE0C0"/><circle cx="140" cy="460" r="34" fill="#5FE0C0" opacity=".2"/>
+            <path d="M840 78 C816 78, 800 96, 800 118 C800 148, 840 176, 840 176 C840 176, 880 148, 880 118 C880 96, 864 78, 840 78 Z"
+                  fill="#FF5B2E"/>
+            <circle cx="840" cy="116" r="14" fill="#060f08"/>
+          </g>
+          <!-- fichas de datos -->
+          <g id="mpCards" opacity="0"></g>
+          <!-- barrido de escaneo -->
+          <line id="mpScan" x1="0" y1="0" x2="0" y2="520" stroke="#CBFF3E" stroke-width="3" opacity="0"/>
+        </svg>
+      </div>
+      <p class="sub" data-sub>La ruta, dibujada sobre la calle.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 06 · REALIDAD VIRTUAL ══════════════ -->
+<section class="chapter" id="s-vr" data-chapter="6" data-veil="drift">
+  <div class="stage">
+
+    <div class="scene scene--bleed" data-scene="vrswap" data-scene-span="3" aria-hidden="true">
+      <svg class="scn scn--vrswap" viewBox="0 0 1600 800" preserveAspectRatio="xMidYMid slice">
+        <!-- cuarto real -->
+        <g id="vsReal">
+          <rect x="0" y="0" width="1600" height="520" fill="#17220f"/>
+          <rect x="0" y="520" width="1600" height="280" fill="url(#mWood)"/>
+          <rect x="1080" y="120" width="340" height="300" rx="6" fill="#6ba36f"/>
+          <rect x="1080" y="120" width="340" height="300" rx="6" fill="none" stroke="#b8d49a" stroke-width="12"/>
+          <path d="M1250 120 V420 M1080 270 H1420" stroke="#b8d49a" stroke-width="9"/>
+          <g filter="url(#fSoft)">
+            <rect x="180" y="470" width="420" height="18" rx="4" fill="url(#mWood)"/>
+            <rect x="210" y="488" width="14" height="110" fill="#2b3d18"/>
+            <rect x="556" y="488" width="14" height="110" fill="#2b3d18"/>
+            <rect x="300" y="352" width="200" height="120" rx="6" fill="url(#mDark)" stroke="#38492c" stroke-width="4"/>
+            <rect x="310" y="362" width="180" height="100" fill="url(#mScreen)"/>
+          </g>
+        </g>
+        <!-- mundo virtual -->
+        <g id="vsDigital" opacity="0">
+          <rect x="0" y="0" width="1600" height="470" fill="url(#mSky)"/>
+          <circle cx="1120" cy="150" r="70" fill="#e9ffa6"/><circle cx="1120" cy="150" r="170" fill="url(#mGlow)"/>
+          <path d="M0 470 L200 300 L420 420 L660 230 L900 400 L1140 290 L1380 410 L1600 300 L1600 470 Z" fill="#163a22"/>
+          <path d="M0 470 L200 300 L420 420 L660 230 L900 400 L1140 290 L1380 410 L1600 300" fill="none" stroke="#CBFF3E" stroke-width="3" opacity=".75"/>
+          <rect x="0" y="470" width="1600" height="330" fill="#061407"/>
+          <g id="vsGrid" stroke="#CBFF3E" stroke-width="2" opacity=".5"></g>
+        </g>
+        <!-- gafas cerrándose -->
+        <g id="vsGoggles" opacity="0">
+          <path d="M0 0 H1600 V800 H0 Z
+                   M470 400 m-260 0 a260 210 0 1 0 520 0 a260 210 0 1 0 -520 0
+                   M1130 400 m-260 0 a260 210 0 1 0 520 0 a260 210 0 1 0 -520 0"
+                fill="#000" fill-rule="evenodd"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Pregunta 05</p>
+      <h2 class="mega mega--ask" data-fill>¿Qué es la<br>realidad<br>virtual?</h2>
+    </div>
+    <div class="beat" data-beat data-dark><h2 class="mega mega--def" data-fill>Sustituye por completo</h2></div>
+    <div class="beat" data-beat data-dark><h2 class="mega mega--def mega--out" data-fill>lo que ves y oyes</h2></div>
+    <div class="beat" data-beat data-dark><h2 class="mega mega--def" data-fill>por un mundo digital</h2></div>
+
+    <div class="beat" data-beat><h2 class="mega mega--cover" data-fill>Dónde<br>se usa</h2></div>
+
+    <div class="beat" data-beat>
+      <p class="q">Uso 01 · Juegos</p>
+      <h2 class="mega mega--md" data-fill>Juegos</h2>
+      <div class="art art--full art--obj" data-art="vxGame">
+        <svg class="scn scn--ex" viewBox="0 0 1000 500" aria-hidden="true">
+          <rect x="0" y="0" width="1000" height="500" fill="#091308"/>
+          <g id="vgGrid" stroke="#CBFF3E" stroke-width="2" opacity=".4"></g>
+          <!-- jugador de espaldas con visor y mandos -->
+          <g id="vgPlayer">
+            <ellipse cx="500" cy="470" rx="110" ry="20" fill="#000" opacity=".5"/>
+            <path d="M436 470 L446 300 C450 268, 550 268, 554 300 L564 470 Z" fill="#26361c"/>
+            <circle cx="500" cy="242" r="54" fill="url(#mSkin)"/>
+            <rect x="450" y="220" width="100" height="42" rx="14" fill="#14181e" stroke="#2e3f24" stroke-width="4"/>
+            <rect x="440" y="228" width="16" height="14" rx="5" fill="#1f2c17"/>
+            <rect x="544" y="228" width="16" height="14" rx="5" fill="#1f2c17"/>
+            <path d="M450 330 L340 250" stroke="url(#mSkin)" stroke-width="24" stroke-linecap="round"/>
+            <path d="M550 330 L664 262" stroke="url(#mSkin)" stroke-width="24" stroke-linecap="round"/>
+            <rect x="306" y="222" width="56" height="44" rx="14" fill="#16210f" stroke="#38492c" stroke-width="4"/>
+            <rect x="646" y="234" width="56" height="44" rx="14" fill="#16210f" stroke="#38492c" stroke-width="4"/>
+          </g>
+          <!-- objetivos que llegan -->
+          <g id="vgTargets" opacity="0">
+            <g><circle cx="220" cy="150" r="42" fill="none" stroke="#FF5B2E" stroke-width="6"/><circle cx="220" cy="150" r="14" fill="#FF5B2E"/></g>
+            <g><circle cx="800" cy="120" r="42" fill="none" stroke="#FF5B2E" stroke-width="6"/><circle cx="800" cy="120" r="14" fill="#FF5B2E"/></g>
+            <g><circle cx="640" cy="70" r="30" fill="none" stroke="#FF5B2E" stroke-width="5"/><circle cx="640" cy="70" r="10" fill="#FF5B2E"/></g>
+          </g>
+          <g id="vgSlash" opacity="0">
+            <path d="M330 250 L230 152" stroke="#CBFF3E" stroke-width="8" stroke-linecap="round"/>
+            <path d="M672 258 L792 128" stroke="#CBFF3E" stroke-width="8" stroke-linecap="round"/>
+          </g>
+          <g id="vgScore" opacity="0">
+            <rect x="380" y="24" width="240" height="46" rx="10" fill="#08080A" opacity=".8" stroke="#CBFF3E" stroke-width="2"/>
+            <text x="500" y="54" class="svgmono svgmid" fill="#CBFF3E">COMBO ×12</text>
+          </g>
+        </svg>
+      </div>
+      <p class="sub" data-sub>Tu cuerpo es el mando.</p>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Uso 02 · Formación</p>
+      <h2 class="mega mega--md" data-fill>Formación</h2>
+      <div class="art art--full art--obj" data-art="vxTrain">
+        <svg class="scn scn--ex" viewBox="0 0 1000 500" aria-hidden="true">
+          <rect x="0" y="0" width="1000" height="500" fill="#0b1408"/>
+          <!-- motor desmontable -->
+          <g id="trEngine">
+            <rect x="330" y="180" width="330" height="200" rx="12" fill="url(#mMetal)" stroke="#6b8a55" stroke-width="4"/>
+            <rect x="360" y="150" width="80" height="40" rx="6" fill="#86a468"/>
+            <rect x="470" y="150" width="80" height="40" rx="6" fill="#86a468"/>
+            <rect x="580" y="150" width="60" height="40" rx="6" fill="#86a468"/>
+            <circle cx="400" cy="300" r="42" fill="#4b6238" stroke="#b8d49a" stroke-width="4"/>
+            <circle cx="400" cy="300" r="14" fill="#1e2a14"/>
+            <rect x="470" y="270" width="150" height="60" rx="8" fill="#58703f" stroke="#b8d49a" stroke-width="3"/>
+            <rect x="300" y="380" width="390" height="24" rx="6" fill="#3a4c2b"/>
+          </g>
+          <!-- pieza que se separa -->
+          <g id="trPart" opacity="0">
+            <rect x="700" y="150" width="120" height="80" rx="10" fill="rgba(203,255,62,.16)" stroke="#CBFF3E" stroke-width="4"/>
+            <path d="M660 190 H700" stroke="#CBFF3E" stroke-width="3" stroke-dasharray="8 6"/>
+          </g>
+          <!-- manos con guantes -->
+          <g id="trHands" opacity="0">
+            <path d="M180 500 L226 356 C236 322, 300 322, 306 358 L330 470 Z" fill="#cfd7dd"/>
+            <path d="M820 500 L774 356 C764 322, 700 322, 694 358 L670 470 Z" fill="#cfd7dd"/>
+          </g>
+          <!-- pasos -->
+          <g id="trSteps" opacity="0">
+            <rect x="60" y="60" width="300" height="150" rx="8" fill="#07160b" stroke="#CBFF3E" stroke-width="2"/>
+            <text x="80" y="94" class="svgmono" fill="#CBFF3E">PROCEDIMIENTO</text>
+            <text x="80" y="128" class="svgmono" fill="#EFE9DE">1 · Cortar energía</text>
+            <text x="80" y="158" class="svgmono" fill="#EFE9DE">2 · Retirar cubierta</text>
+            <text x="80" y="188" class="svgmono" fill="#93b57a">3 · Extraer módulo</text>
+          </g>
+        </svg>
+      </div>
+      <p class="sub" data-sub>Desarmar el motor cien veces sin romper ninguno.</p>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Uso 03 · Educación</p>
+      <h2 class="mega mega--md" data-fill>Educación</h2>
+      <div class="art art--full art--obj" data-art="vxEdu">
+        <svg class="scn scn--ex" viewBox="0 0 1000 500" aria-hidden="true">
+          <rect x="0" y="0" width="1000" height="500" fill="#0a1409"/>
+          <!-- pirámide y desierto: estar en el sitio -->
+          <rect x="0" y="360" width="1000" height="140" fill="#9aa85c"/>
+          <path d="M0 360 H1000" stroke="#7d8a44" stroke-width="4"/>
+          <g id="edPyr" opacity="0">
+            <path d="M500 120 L720 360 L280 360 Z" fill="#aabd66"/>
+            <path d="M500 120 L720 360 L500 360 Z" fill="#86994c"/>
+            <path d="M500 120 L500 360" stroke="#6f8040" stroke-width="3"/>
+            <path d="M760 250 L860 360 L660 360 Z" fill="#9fb05e"/>
+          </g>
+          <circle cx="180" cy="120" r="54" fill="#e8ffa8" opacity=".9"/>
+          <!-- estudiante de espaldas con visor -->
+          <g id="edStudent">
+            <ellipse cx="240" cy="470" rx="70" ry="14" fill="#000" opacity=".45"/>
+            <path d="M200 470 L208 366 C211 344, 269 344, 272 366 L280 470 Z" fill="#26421f"/>
+            <circle cx="240" cy="330" r="34" fill="url(#mSkin)"/>
+            <rect x="208" y="316" width="64" height="26" rx="9" fill="#14181e" stroke="#2e3f24" stroke-width="3"/>
+          </g>
+          <!-- ficha de datos -->
+          <g id="edCard" opacity="0">
+            <rect x="620" y="60" width="330" height="130" rx="8" fill="#07160b" stroke="#CBFF3E" stroke-width="2"/>
+            <text x="640" y="94" class="svgmono" fill="#CBFF3E">GUIZA · c. 2560 a.C.</text>
+            <text x="640" y="126" class="svgmono" fill="#EFE9DE">Altura original 146.6 m</text>
+            <text x="640" y="156" class="svgmono" fill="#EFE9DE">2.3 millones de bloques</text>
+            <line x1="620" y1="150" x2="540" y2="230" stroke="#CBFF3E" stroke-width="2"/>
+          </g>
+        </svg>
+      </div>
+      <p class="sub" data-sub>No leer sobre el lugar: estar de pie en él.</p>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Uso 04 · Empresas</p>
+      <h2 class="mega mega--md" data-fill>Empresas</h2>
+      <div class="art art--full art--obj" data-art="vxBiz">
+        <svg class="scn scn--ex" viewBox="0 0 1000 500" aria-hidden="true">
+          <rect x="0" y="0" width="1000" height="500" fill="#0b1508"/>
+          <g id="bzGrid" stroke="#CBFF3E" stroke-width="1.5" opacity=".25"></g>
+          <!-- mesa de juntas -->
+          <ellipse cx="500" cy="400" rx="330" ry="86" fill="#1e3d26" stroke="#5b8a5e" stroke-width="4"/>
+          <ellipse cx="500" cy="392" rx="330" ry="86" fill="#26492e" stroke="#6b9a6e" stroke-width="3"/>
+          <!-- pantalla compartida -->
+          <g id="bzScreen" opacity="0">
+            <rect x="330" y="60" width="340" height="200" rx="8" fill="#07160b" stroke="#CBFF3E" stroke-width="3"/>
+            <polyline points="356,224 412,190 468,204 524,150 580,168 644,96" fill="none" stroke="#CBFF3E" stroke-width="4"/>
+            <text x="356" y="96" class="svgmono" fill="#CBFF3E">Q3 · +18%</text>
+          </g>
+          <!-- avatares con torso y cabeza -->
+          <g id="bzAvatars"></g>
+        </svg>
+      </div>
+      <p class="sub" data-sub>Cinco ciudades, una sola mesa.</p>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Uso 05 · Terapia</p>
+      <h2 class="mega mega--md" data-fill>Terapia</h2>
+      <div class="art art--full art--obj" data-art="vxTher">
+        <svg class="scn scn--ex" viewBox="0 0 1000 500" aria-hidden="true">
+          <defs>
+            <!-- La playa no entra con un círculo: se materializa en granos que
+                 crecen desordenados, como cuando cambias de entorno en un visor. -->
+            <mask id="thReveal"><g id="thGrains"></g></mask>
+          </defs>
+
+          <!-- consulta real -->
+          <g id="thRoom">
+            <rect x="0" y="0" width="1000" height="340" fill="#1a2412"/>
+            <rect x="0" y="340" width="1000" height="160" fill="url(#mWood)"/>
+            <path d="M0 340 H1000" stroke="#3a4d24" stroke-width="3"/>
+            <rect x="60" y="70" width="150" height="120" fill="#12210f" stroke="#8fae62" stroke-width="6"/>
+            <path d="M66 180 L108 138 L134 160 L172 120 L200 158 L200 184 L66 184 Z" fill="#2e5a33"/>
+            <g><path d="M880 250 h64 l-9 90 h-46 z" fill="#40602a"/>
+               <path d="M912 250 C876 226, 872 186, 902 168" fill="none" stroke="#4a6b3c" stroke-width="8"/>
+               <ellipse cx="900" cy="166" rx="26" ry="15" fill="#4f7340" transform="rotate(-24 900 166)"/></g>
+            <!-- sillón -->
+            <g filter="url(#fSoft)">
+              <rect x="380" y="300" width="240" height="76" rx="14" fill="url(#mFabric)"/>
+              <rect x="392" y="252" width="216" height="60" rx="16" fill="#5d7c3e"/>
+              <rect x="366" y="262" width="26" height="112" rx="10" fill="#4c6a33"/>
+              <rect x="608" y="262" width="26" height="112" rx="10" fill="#4c6a33"/>
+            </g>
+            <!-- silla del terapeuta -->
+            <rect x="150" y="300" width="90" height="18" rx="6" fill="#4c6a33"/>
+            <rect x="156" y="240" width="78" height="62" rx="10" fill="#3f5a2a"/>
+            <g><path d="M195 240 L200 190 C202 176, 236 176, 238 190 L243 300 Z" fill="#2e4527"/>
+               <circle cx="219" cy="168" r="26" fill="url(#mSkin)"/></g>
+          </g>
+
+          <!-- playa que se revela en círculo, como cambiar de entorno -->
+          <g mask="url(#thReveal)">
+            <rect x="0" y="0" width="1000" height="300" fill="url(#mSky)"/>
+            <circle cx="770" cy="110" r="46" fill="#e9ffa6"/>
+            <circle cx="770" cy="110" r="120" fill="url(#mGlow)"/>
+            <rect x="0" y="286" width="1000" height="66" fill="#1c5a4a"/>
+            <path id="thWave1" d="M0 300 q60 -12 120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 v20 H0 Z" fill="#2b7f66" opacity=".9"/>
+            <path id="thWave2" d="M0 318 q70 -14 140 0 t140 0 t140 0 t140 0 t140 0 t140 0 t140 0 v22 H0 Z" fill="#3f9c7c" opacity=".85"/>
+            <rect x="0" y="340" width="1000" height="160" fill="#9aa85c"/>
+            <path d="M0 340 H1000" stroke="#b6c470" stroke-width="3"/>
+            <g opacity=".5" stroke="#7d8a44" stroke-width="2">
+              <path d="M0 380 q120 -8 240 0 t240 0 t240 0 t240 0"/>
+              <path d="M0 430 q120 8 240 0 t240 0 t240 0 t240 0"/>
+            </g>
+            <!-- palmera -->
+            <g>
+              <path d="M120 470 C104 402, 114 352, 136 320" fill="none" stroke="#5f7a34" stroke-width="13"/>
+              <path d="M136 320 C96 292, 54 300, 34 332 C66 316, 104 314, 136 320 Z" fill="#4f7340"/>
+              <path d="M136 320 C176 292, 220 302, 240 334 C206 316, 168 314, 136 320 Z" fill="#456635"/>
+              <path d="M136 320 C118 280, 130 244, 160 226 C146 262, 140 292, 136 320 Z" fill="#5b8a45"/>
+              <path d="M136 320 C160 288, 200 274, 232 280 C198 292, 164 304, 136 320 Z" fill="#3f6030"/>
+              <path d="M136 320 C110 296, 74 286, 44 292 C78 300, 110 308, 136 320 Z" fill="#3f6030"/>
+              <circle cx="140" cy="330" r="9" fill="#7d8a44"/><circle cx="122" cy="336" r="7" fill="#6f8040"/>
+            </g>
+          </g>
+
+          <!-- la persona, encima de los dos entornos -->
+          <g id="thPerson">
+            <path d="M462 356 L470 264 C472 248, 528 248, 530 264 L538 356 Z" fill="#2e4527"/>
+            <circle cx="500" cy="232" r="34" fill="url(#mSkin)"/>
+            <g id="thVisor" opacity="0">
+              <rect x="468" y="218" width="64" height="27" rx="9" fill="#14181e" stroke="#3d434c" stroke-width="3"/>
+              <rect x="474" y="223" width="52" height="17" rx="6" fill="#CBFF3E" opacity=".85"/>
+            </g>
+          </g>
+
+          <g id="thMeter" opacity="0"></g>
+          <g id="thGlow" opacity="0"><rect x="0" y="0" width="1000" height="500" fill="url(#mGlow)"/></g>
+        </svg>
+      </div>
+      <p class="sub" data-sub>La consulta se vuelve una playa. La ansiedad baja.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 07 · REALIDAD MIXTA ══════════════ -->
+<section class="chapter" id="s-mr" data-chapter="7" data-veil="orbit">
+  <div class="stage">
+
+    <!-- MR de manual: una maqueta virtual APOYADA en una mesa real,
+         que dos personas rodean, se ocluye tras objetos reales y se toca. -->
+    <div class="scene scene--bleed" data-scene="mixed" data-scene-span="3" aria-hidden="true">
+      <svg class="scn scn--mix" viewBox="0 0 1600 800" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <clipPath id="mxBehindMug"><path d="M0 0 H1180 V800 H0 Z M1180 0 H1600 V330 H1180 Z"/></clipPath>
+        </defs>
+
+        <!-- oficina real -->
+        <rect x="0" y="0" width="1600" height="430" fill="#1a2412"/>
+        <rect x="0" y="430" width="1600" height="370" fill="#101709"/>
+        <rect x="1180" y="80" width="330" height="230" rx="6" fill="#2a4a30" stroke="#8fae62" stroke-width="10"/>
+        <path d="M1345 80 V310 M1180 195 H1510" stroke="#8fae62" stroke-width="7"/>
+
+        <!-- mesa real -->
+        <g filter="url(#fSoft)">
+          <ellipse cx="800" cy="560" rx="470" ry="120" fill="url(#mWood)"/>
+          <ellipse cx="800" cy="548" rx="470" ry="120" fill="#5e7f34"/>
+          <ellipse cx="800" cy="548" rx="470" ry="120" fill="none" stroke="#7d9a4a" stroke-width="4"/>
+          <path d="M770 660 h60 v120 h-60 z" fill="#3a4d24"/>
+        </g>
+        <!-- objetos reales sobre la mesa -->
+        <g filter="url(#fSoft)">
+          <path d="M1216 452 h84 l-11 78 h-62 z" fill="#c2dba4"/>
+          <ellipse cx="1258" cy="452" rx="42" ry="12" fill="#d8eeba"/>
+          <path d="M1300 470 q34 20 0 40" fill="none" stroke="#c2dba4" stroke-width="11"/>
+        </g>
+        <g><rect x="300" y="500" width="180" height="30" rx="4" fill="#7a4a1e"/>
+           <rect x="300" y="492" width="180" height="10" rx="3" fill="#c2dba4"/></g>
+
+        <!-- personas reales alrededor -->
+        <g id="mxPeopleL">
+          <path d="M150 800 L170 600 C176 556, 284 556, 290 600 L310 800 Z" fill="#2e4527"/>
+          <circle cx="230" cy="520" r="56" fill="url(#mSkin)"/>
+          <rect x="182" y="500" width="96" height="34" rx="12" fill="#14181e" stroke="#3d434c" stroke-width="4"/>
+          <rect x="190" y="507" width="80" height="20" rx="7" fill="#CBFF3E" opacity=".8"/>
+          <path d="M286 640 L420 590" stroke="url(#mSkin)" stroke-width="30" stroke-linecap="round"/>
+        </g>
+        <g id="mxPeopleR">
+          <path d="M1290 800 L1310 640 C1316 604, 1404 604, 1410 640 L1430 800 Z" fill="#26421f"/>
+          <circle cx="1360" cy="576" r="46" fill="url(#mSkin)"/>
+          <rect x="1322" y="560" width="78" height="28" rx="10" fill="#14181e" stroke="#3d434c" stroke-width="4"/>
+          <rect x="1329" y="566" width="64" height="16" rx="6" fill="#CBFF3E" opacity=".8"/>
+        </g>
+
+        <!-- escaneo de la superficie real -->
+        <g id="mxScan" opacity="0" stroke="#5FE0C0" stroke-width="2"></g>
+
+        <!-- MAQUETA VIRTUAL sobre la mesa -->
+        <g id="mxModel" opacity="0" clip-path="url(#mxBehindMug)">
+          <ellipse id="mxShadow" cx="800" cy="536" rx="230" ry="52" fill="#000" opacity="0"/>
+          <g id="mxCity">
+            <!-- plataforma -->
+            <ellipse cx="800" cy="520" rx="230" ry="52" fill="rgba(203,255,62,.1)" stroke="#CBFF3E" stroke-width="3"/>
+            <!-- torres -->
+            <g stroke="#CBFF3E" stroke-width="3">
+              <path d="M660 520 L660 330 L724 306 L724 496 Z" fill="rgba(203,255,62,.16)"/>
+              <path d="M724 306 L788 330 L788 520 L724 496 Z" fill="rgba(203,255,62,.26)"/>
+              <path d="M660 330 L724 306 L788 330 L724 354 Z" fill="rgba(203,255,62,.34)"/>
+              <path d="M812 520 L812 396 L862 378 L862 502 Z" fill="rgba(203,255,62,.16)"/>
+              <path d="M862 378 L912 396 L912 520 L862 502 Z" fill="rgba(203,255,62,.26)"/>
+              <path d="M812 396 L862 378 L912 396 L862 414 Z" fill="rgba(203,255,62,.34)"/>
+              <path d="M584 520 L584 434 L624 420 L624 506 Z" fill="rgba(203,255,62,.14)"/>
+              <path d="M624 420 L664 434 L664 520 L624 506 Z" fill="rgba(203,255,62,.22)"/>
+              <path d="M938 520 L938 448 L974 436 L974 508 Z" fill="rgba(203,255,62,.14)"/>
+              <path d="M974 436 L1010 448 L1010 520 L974 508 Z" fill="rgba(203,255,62,.22)"/>
+            </g>
+            <!-- calles -->
+            <path d="M600 520 L800 566 L1000 520" fill="none" stroke="#CBFF3E" stroke-width="2" opacity=".6"/>
+          </g>
+          <g id="mxLabels"></g>
+        </g>
+
+        <!-- mano real que la atraviesa: prueba de oclusión -->
+        <g id="mxHand" opacity="0" filter="url(#fSoft)">
+          <path d="M396 700 L410 612 C414 586, 452 580, 462 604 L486 662 Z" fill="url(#mSkin)"/>
+          <path d="M414 606 C404 566, 428 548, 446 556 L452 604" fill="url(#mSkin)"/>
+          <path d="M444 592 C440 552, 466 538, 482 548 L482 598" fill="#a8cc78"/>
+          <path d="M476 592 C476 556, 502 544, 516 556 L512 606" fill="#93c25c"/>
+          <path d="M508 604 C514 576, 540 570, 548 588 L538 626" fill="#86b552"/>
+          <path d="M462 604 C520 596, 566 618, 570 654 C574 690, 522 706, 476 700 L440 692 Z" fill="url(#mSkin)"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Pregunta 06</p>
+      <h2 class="mega mega--ask" data-fill>¿Qué es la<br>realidad<br>mixta?</h2>
+    </div>
+    <div class="beat" data-beat><h2 class="mega mega--def" data-fill>Pone objetos virtuales</h2></div>
+    <div class="beat" data-beat><h2 class="mega mega--def mega--out" data-fill>dentro de tu espacio<br>real</h2></div>
+    <div class="beat" data-beat><h2 class="mega mega--def" data-fill>y los dos<br>se afectan</h2></div>
+  </div>
+</section>
+
+<!-- ══════════════ 08 · EJES 3D ══════════════ -->
+<section class="chapter" id="s-ejes" data-chapter="8" data-veil="axis">
+  <div class="stage">
+
+    <div class="scene scene--bleed" data-scene="space" data-scene-span="3" aria-hidden="true">
+      <div class="space3d">
+        <div class="space3d__floor"></div>
+        <div class="space3d__gizmo" id="spGizmo">
+          <div class="gizmo__axis gizmo__axis--x"><span class="gizmo__cap">+X</span></div>
+          <div class="gizmo__axis gizmo__axis--y"><span class="gizmo__cap">+Y</span></div>
+          <div class="gizmo__axis gizmo__axis--z"><span class="gizmo__cap">+Z</span></div>
+          <div class="gizmo__origin"></div>
+          <div class="gizmo__cube"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+        <div class="space3d__read" id="spRead">( 0.0, 0.0, 0.0 )</div>
+        <p class="space3d__hint" id="spHint">Arrastra para girarlo</p>
+      </div>
+    </div>
+
+    <div class="beat" data-beat>
+      <p class="q">Pregunta 07</p>
+      <h2 class="mega mega--ask" data-fill>¿Cuáles son<br>los ejes<br>en 3D?</h2>
+    </div>
+    <div class="beat" data-beat><h2 class="mega mega--def" data-fill>Son tres direcciones</h2></div>
+    <div class="beat" data-beat><h2 class="mega mega--def mega--out" data-fill>perpendiculares<br>entre sí</h2></div>
+    <div class="beat" data-beat><h2 class="mega mega--def" data-fill>que definen<br>cualquier punto</h2></div>
+
+    <div class="beat" data-beat data-axis="x">
+      <h2 class="mega mega--md ax--x" data-fill>X · Ancho</h2>
+      <div class="art art--full art--obj" data-art="axRuler">
+        <div class="ruler ruler--x"><i></i><b>izquierda ↔ derecha</b></div>
+      </div>
+    </div>
+    <div class="beat" data-beat data-axis="y">
+      <h2 class="mega mega--md ax--y" data-fill>Y · Alto</h2>
+      <div class="art art--full art--obj" data-art="axRuler">
+        <div class="ruler ruler--y"><i></i><b>abajo ↔ arriba</b></div>
+      </div>
+    </div>
+    <div class="beat" data-beat data-axis="z">
+      <h2 class="mega mega--md ax--z" data-fill>Z · Profundidad</h2>
+      <div class="art art--full art--obj" data-art="axRuler">
+        <div class="ruler ruler--z"><i></i><b>cerca ↔ lejos</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 09 · CIERRE ══════════════ -->
+<section class="chapter" id="s-cierre" data-chapter="9" data-veil="drift">
+  <div class="stage">
+    <div class="beat" data-beat data-final>
+      <div class="art art--full" data-art="finale"><canvas id="finale"></canvas></div>
+      <h2 class="mega mega--out" data-fill>Fin del<br>recorrido</h2>
+      <div class="signoff">
+        <p class="signoff__name" data-signname>Oscar Eduardo López Sousa</p>
+        <p class="signoff__career" data-signcareer>Negocios y Mercados Digitales · ITESO</p>
+        <p class="signoff__src" data-signsrc>
+          <span>XPinmersivas M01</span><span>Slater &amp; Wilbur 1997</span><span>Ermi &amp; Mäyrä 2005</span><span>Milgram &amp; Kishino 1994</span><span>Unity · Unreal · Blender · Three.js</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/ScrollToPlugin.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script src="js/main.js?v=6"></script>
+</body>
+</html>
