@@ -1088,7 +1088,8 @@
           <circle cx="230" cy="520" r="56" fill="url(#mSkin)"/>
           <rect x="182" y="500" width="96" height="34" rx="12" fill="#14181e" stroke="#3d434c" stroke-width="4"/>
           <rect x="190" y="507" width="80" height="20" rx="7" fill="#CBFF3E" opacity=".8"/>
-          <path d="M286 640 L420 590" stroke="url(#mSkin)" stroke-width="30" stroke-linecap="round"/>
+          <!-- el brazo es quien manipula la maqueta: gira desde el hombro -->
+          <path id="mxArmL" d="M286 640 L470 596" stroke="url(#mSkin)" stroke-width="30" stroke-linecap="round"/>
         </g>
         <g id="mxPeopleR">
           <path d="M1290 800 L1310 640 C1316 604, 1404 604, 1410 640 L1430 800 Z" fill="#26421f"/>
@@ -1125,15 +1126,6 @@
           <g id="mxLabels"></g>
         </g>
 
-        <!-- mano real que la atraviesa: prueba de oclusión -->
-        <g id="mxHand" opacity="0" filter="url(#fSoft)">
-          <path d="M396 700 L410 612 C414 586, 452 580, 462 604 L486 662 Z" fill="url(#mSkin)"/>
-          <path d="M414 606 C404 566, 428 548, 446 556 L452 604" fill="url(#mSkin)"/>
-          <path d="M444 592 C440 552, 466 538, 482 548 L482 598" fill="#a8cc78"/>
-          <path d="M476 592 C476 556, 502 544, 516 556 L512 606" fill="#93c25c"/>
-          <path d="M508 604 C514 576, 540 570, 548 588 L538 626" fill="#86b552"/>
-          <path d="M462 604 C520 596, 566 618, 570 654 C574 690, 522 706, 476 700 L440 692 Z" fill="url(#mSkin)"/>
-        </g>
       </svg>
     </div>
 

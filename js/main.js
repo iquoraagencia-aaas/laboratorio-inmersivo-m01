@@ -550,13 +550,12 @@ const SCENES = {
       .to('#mxScan', { opacity: .25, duration: u * .3 }, at + u * 1.1)
       .fromTo('#mxL1', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: u * .2 }, at + u * 1.2)
       .to('#mxL1', { opacity: 0, duration: u * .2 }, at + u * 2.4)
-      // 3 · la mano real la gira: lo virtual obedece a lo físico
-      .fromTo('#mxHand', { opacity: 0, x: -240 },
-        { opacity: 1, x: 0, duration: u * .4, ease: 'power2.out' }, at + u * 1.55)
+      /* 3 · la persona la gira con el brazo: el gesto físico mueve lo virtual.
+         El brazo pivota desde el hombro, así que basta rotarlo. */
+      .to('#mxArmL', { rotation: -9, transformOrigin: '286px 640px', duration: u * .6, ease: 'sine.inOut' }, at + u * 1.85)
       .to('#mxCity', { rotationY: 26, transformOrigin: '800px 520px', duration: u * .6, ease: 'sine.inOut' }, at + u * 1.85)
-      .to('#mxHand', { x: 300, duration: u * .6, ease: 'sine.inOut' }, at + u * 1.85)
+      .to('#mxArmL', { rotation: 7, transformOrigin: '286px 640px', duration: u * .55, ease: 'sine.inOut' }, at + u * 2.45)
       .to('#mxCity', { rotationY: -14, duration: u * .55, ease: 'sine.inOut' }, at + u * 2.45)
-      .to('#mxHand', { x: -60, opacity: .9, duration: u * .55, ease: 'sine.inOut' }, at + u * 2.45)
       // 4 · y la taza real la tapa: la oclusión demuestra que comparten espacio
       .to('#mxModel', { x: 250, duration: u * .5, ease: 'sine.inOut' }, at + u * 2.5)
       .to('#mxModel', { x: 0, duration: u * .4, ease: 'sine.inOut' }, at + u * 2.95);
